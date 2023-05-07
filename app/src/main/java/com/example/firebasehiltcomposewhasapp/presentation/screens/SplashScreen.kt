@@ -1,4 +1,4 @@
-package com.example.firebasehiltcomposewhasapp.composables.screens
+package com.example.firebasehiltcomposewhasapp.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,7 +38,7 @@ fun Splash(){
     Column(
         Modifier
             .fillMaxSize()
-            .background(Color.Green),
+            .background(Color.Gray),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center)
     {

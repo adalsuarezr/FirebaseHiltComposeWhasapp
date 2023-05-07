@@ -11,6 +11,7 @@
         android:name=".FirebaseHiltComposeWhatsappApp"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="fullSensor"
         android:theme="@style/Theme.FirebaseHiltComposeWhasapp"
         tools:targetApi="31">
         <activity
