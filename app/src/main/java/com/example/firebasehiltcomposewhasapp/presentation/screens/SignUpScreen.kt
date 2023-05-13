@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,20 +21,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.firebasehiltcomposewhasapp.navigation.AppScreens
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyEmailTextField
-import com.example.firebasehiltcomposewhasapp.presentation.composables.MyLogInButton
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyPasswordTextField
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyRepeatPasswordTextField
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MySignUpButton
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyTextLink
-import com.example.firebasehiltcomposewhasapp.viewmodels.MyViewModel
+import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MySignInViewModel
 
 
 @Composable
-fun SignUpScreen(navController: NavHostController, viewModel: MyViewModel) {
+fun SignUpScreen(navController: NavHostController, viewModel: MySignInViewModel) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val repeatPassword: String by viewModel.repeatPassword.observeAsState(initial = "")
     val focusManager = LocalFocusManager.current
+    var context = LocalContext.current
     Column(
         Modifier
             .fillMaxSize()
@@ -71,7 +72,7 @@ fun SignUpScreen(navController: NavHostController, viewModel: MyViewModel) {
             viewModel,
             focusManager
         ) { viewModel.onRepeatPasswordChanged(it) }
-        MySignUpButton("Sign Up", viewModel, navController)
+        MySignUpButton("Sign Up", viewModel, context, navController)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             MyTextLink("Login", navController, AppScreens.LogInScreen)
         }

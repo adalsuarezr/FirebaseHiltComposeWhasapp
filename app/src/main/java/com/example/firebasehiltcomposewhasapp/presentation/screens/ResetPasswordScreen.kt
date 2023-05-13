@@ -19,16 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.firebasehiltcomposewhasapp.navigation.AppScreens
-import com.example.firebasehiltcomposewhasapp.presentation.composables.MyEmailTextField
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyPasswordTextField
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyRepeatPasswordTextField
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyResetPasswordButton
-import com.example.firebasehiltcomposewhasapp.presentation.composables.MySignUpButton
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyTextLink
-import com.example.firebasehiltcomposewhasapp.viewmodels.MyViewModel
+import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MySignInViewModel
 
 @Composable
-fun ResetPasswordScreen(navController: NavHostController, viewModel: MyViewModel){
+fun ResetPasswordScreen(navController: NavHostController, viewModel: MySignInViewModel){
     val password: String by viewModel.password.observeAsState(initial = "")
     val repeatPassword: String by viewModel.repeatPassword.observeAsState(initial = "")
     val focusManager = LocalFocusManager.current

@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.firebasehiltcomposewhasapp.R
 import com.example.firebasehiltcomposewhasapp.navigation.AppScreens
-import com.example.firebasehiltcomposewhasapp.viewmodels.MyViewModel
+import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MySignInViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavHostController, viewModel: MyViewModel) {
+fun SplashScreen(navController: NavHostController, viewModel: MySignInViewModel) {
     LaunchedEffect(key1 = true) {
         delay(2000)
         navController.popBackStack()

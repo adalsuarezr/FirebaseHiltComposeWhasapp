@@ -1,15 +1,20 @@
-package com.example.firebasehiltcomposewhasapp.viewmodels
+package com.example.firebasehiltcomposewhasapp.presentation.viewmodels
 
-import android.provider.ContactsContract.CommonDataKinds.Email
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.example.firebasehiltcomposewhasapp.domain.Repository.FirebaseRepositoryImpl
+import com.example.firebasehiltcomposewhasapp.navigation.AppScreens
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.annotation.meta.When
 import javax.inject.Inject
 
 @HiltViewModel
-class MyViewModel @Inject constructor() : ViewModel() {
+class MySignInViewModel @Inject constructor() : ViewModel() {
+    private val repository = FirebaseRepositoryImpl()
 
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
@@ -117,5 +122,34 @@ class MyViewModel @Inject constructor() : ViewModel() {
             boolean = true
         }
         return boolean
+    }
+
+    fun createAccountEmailPassword(context: Context, navController: NavController){
+        repository.createUserEmailPassword(_email.value.toString(),_password.value.toString()){success->
+            if(success){
+                navController.navigate(AppScreens.EmailVerificationScreen.route)
+            }else{
+                makeToast(context, "Failed to create account", Toast.LENGTH_LONG)
+            }
+
+        }
+    }
+
+    fun loginAccountEmailPassword(context: Context, navController: NavController){
+        repository.loginUserEmailPassword(_email.value.toString(),_password.value.toString()){success->
+            if(success){
+                navController.navigate(AppScreens.HomeScreen.route)
+            }else{
+                if(FirebaseAuth.getInstance().currentUser?.isEmailVerified == false){
+                    FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
+                    navController.navigate(AppScreens.EmailVerificationScreen.route)
+                }else{
+                    makeToast(context, "Failed to login with the information provided", Toast.LENGTH_LONG)
+                }
+            }
+        }
+    }
+    private fun makeToast(context: Context, message: String, length: Int){
+        Toast.makeText(context,message,length).show()
     }
 }

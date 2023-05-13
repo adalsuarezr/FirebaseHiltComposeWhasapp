@@ -31,7 +31,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.firebasehiltcomposewhasapp.viewmodels.MyViewModel
+import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MyHomeViewModel
+import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MySignInViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +41,7 @@ fun MyEmailTextField(
     label: String,
     placeholder: String,
     keyboard: KeyboardType,
-    viewModel: MyViewModel,
+    viewModel: MySignInViewModel,
     focusManager:FocusManager,
     onTextChanged: (String) -> Unit
 ) {
@@ -113,7 +114,7 @@ fun MyPasswordTextField(
     label: String,
     placeholder: String,
     keyboard: KeyboardType,
-    viewModel: MyViewModel,
+    viewModel: MySignInViewModel,
     focusManager:FocusManager,
     onTextChanged: (String) -> Unit
 ) {
@@ -190,7 +191,7 @@ fun MyRepeatPasswordTextField(
     label: String,
     placeholder: String,
     keyboard: KeyboardType,
-    viewModel: MyViewModel,
+    viewModel: MySignInViewModel,
     focusManager:FocusManager,
     onTextChanged: (String) -> Unit
 ) {
@@ -255,6 +256,98 @@ fun MyRepeatPasswordTextField(
                 unfocusedLabelColor = Color.Gray,
                 focusedLabelColor = Color.Black,
                 unfocusedIndicatorColor = Color.Black
+            )
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyChatNameTextField(
+    name: String,
+    label: String,
+    placeholder: String,
+    viewModel: MyHomeViewModel,
+    focusManager:FocusManager,
+    onTextChanged: (String) -> Unit
+) {
+    Column(Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = name,
+            onValueChange = { onTextChanged(it) },
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp)
+                .background(Color.Transparent),
+            label = { Text(text = label) },
+            placeholder = { Text(text = placeholder) },
+            maxLines = 1,
+            isError = !viewModel.chatNameValidator() && name.isNotBlank(),
+            supportingText = {
+                if (!viewModel.chatNameValidator() && name.isNotBlank()) {
+                    Text(viewModel.chatNameErrorMessage(name), Modifier.fillMaxWidth(), Color.Red)
+                } else {
+                    ""
+                }
+            },
+            shape = RoundedCornerShape(24.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = {focusManager.moveFocus(FocusDirection.Down)}),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                placeholderColor = Color.Gray,
+                unfocusedLabelColor = Color.Gray,
+                focusedLabelColor = Color.Black,
+                unfocusedIndicatorColor = Color.Black,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary
+            )
+        )
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyParticipantTextField(
+    participant: String,
+    label: String,
+    placeholder: String,
+    viewModel: MyHomeViewModel,
+    focusManager:FocusManager,
+    onTextChanged: (String) -> Unit,
+    modifier:Modifier
+) {
+    Column(modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = participant,
+            onValueChange = { onTextChanged(it) },
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp)
+                .background(Color.Transparent),
+            label = { Text(text = label) },
+            placeholder = { Text(text = placeholder) },
+            maxLines = 1,
+            isError = !viewModel.participantValidator() && participant.isNotBlank(),
+            supportingText = {
+                if (!viewModel.participantValidator() && participant.isNotBlank()) {
+                    Text(viewModel.participantErrorMessage(participant), Modifier.fillMaxWidth(), Color.Red)
+                } else {
+                    ""
+                }
+            },
+            shape = RoundedCornerShape(24.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = {focusManager.moveFocus(FocusDirection.Down)}),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                placeholderColor = Color.Gray,
+                unfocusedLabelColor = Color.Gray,
+                focusedLabelColor = Color.Black,
+                unfocusedIndicatorColor = Color.Black,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary
             )
         )
     }

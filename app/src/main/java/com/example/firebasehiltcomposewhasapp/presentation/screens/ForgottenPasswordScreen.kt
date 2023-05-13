@@ -23,10 +23,10 @@ import com.example.firebasehiltcomposewhasapp.navigation.AppScreens
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyEmailTextField
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MySendEmailButton
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyTextLink
-import com.example.firebasehiltcomposewhasapp.viewmodels.MyViewModel
+import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MySignInViewModel
 
 @Composable
-fun ForgottenPasswordScreen(navController: NavHostController, viewModel: MyViewModel) {
+fun ForgottenPasswordScreen(navController: NavHostController, viewModel: MySignInViewModel) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val focusManager = LocalFocusManager.current
     Column(

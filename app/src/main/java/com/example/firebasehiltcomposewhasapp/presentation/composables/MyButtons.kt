@@ -1,5 +1,6 @@
 package com.example.firebasehiltcomposewhasapp.presentation.composables
 
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonDefaults
@@ -11,12 +12,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.firebasehiltcomposewhasapp.navigation.AppScreens
-import com.example.firebasehiltcomposewhasapp.viewmodels.MyViewModel
+import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MyHomeViewModel
+import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MySignInViewModel
 
 @Composable
-fun MyLogInButton(placeholder: String, viewModel: MyViewModel, navController: NavHostController) {
+fun MyLogInButton(placeholder: String, viewModel: MySignInViewModel, context:Context, navController: NavHostController) {
     TextButton(
-        onClick = { navController.navigate(AppScreens.HomeScreen.route) },
+        onClick = { viewModel.loginAccountEmailPassword(context,navController) },
         Modifier
             .width(180.dp)
             .padding(top = 24.dp),
@@ -31,9 +33,9 @@ fun MyLogInButton(placeholder: String, viewModel: MyViewModel, navController: Na
 }
 
 @Composable
-fun MySignUpButton(placeholder: String, viewModel: MyViewModel, navController: NavHostController) {
+fun MySignUpButton(placeholder: String, viewModel: MySignInViewModel, context:Context, navController: NavHostController) {
     TextButton(
-        onClick = { navController.navigate(AppScreens.HomeScreen.route) },
+        onClick = { viewModel.createAccountEmailPassword(context,navController) },
         Modifier
             .width(180.dp)
             .padding(top = 24.dp),
@@ -48,7 +50,7 @@ fun MySignUpButton(placeholder: String, viewModel: MyViewModel, navController: N
 }
 
 @Composable
-fun MySendEmailButton(placeholder: String, viewModel: MyViewModel, navController: NavHostController) {
+fun MySendEmailButton(placeholder: String, viewModel: MySignInViewModel, navController: NavHostController) {
     TextButton(
         onClick = { navController.navigate(AppScreens.ResetPasswordScreen.route) },
         Modifier
@@ -65,7 +67,7 @@ fun MySendEmailButton(placeholder: String, viewModel: MyViewModel, navController
 }
 
 @Composable
-fun MyResetPasswordButton(placeholder: String, viewModel: MyViewModel, navController: NavHostController) {
+fun MyResetPasswordButton(placeholder: String, viewModel: MySignInViewModel, navController: NavHostController) {
     TextButton(
         onClick = { navController.navigate(AppScreens.LogInScreen.route) },
         Modifier
@@ -80,3 +82,21 @@ fun MyResetPasswordButton(placeholder: String, viewModel: MyViewModel, navContro
         Text(text = placeholder, color = Color.LightGray)
     }
 }
+
+@Composable
+fun MyCreateChatButton(placeholder: String, viewModel: MyHomeViewModel, navController: NavHostController) {
+    TextButton(
+        onClick = { navController.navigate(AppScreens.HomeScreen.route) },
+        Modifier
+            .width(180.dp)
+            .padding(top = 24.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Black,
+            disabledContainerColor = Color.DarkGray,
+        ),
+        enabled = viewModel.enableCreateChat()
+    ) {
+        Text(text = placeholder, color = Color.LightGray)
+    }
+}
+

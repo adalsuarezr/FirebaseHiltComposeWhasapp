@@ -9,4 +9,5 @@ sealed class AppScreens(val route:String) {
     object ResetPasswordScreen:AppScreens("reset_password_screen")
     object HomeScreen:AppScreens("home_screen")
     object ChatScreen:AppScreens("chat_Screen")
+    object NewChatScreen:AppScreens("new_chat_Screen")
 }
