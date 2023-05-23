@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.example.firebasehiltcomposewhasapp.domain.Repository.FirebaseRepositoryImpl
+import com.example.firebasehiltcomposewhasapp.domain.repository.FirebaseRepositoryImpl
 import com.example.firebasehiltcomposewhasapp.navigation.AppScreens
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel

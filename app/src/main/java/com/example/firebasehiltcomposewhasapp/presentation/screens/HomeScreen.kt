@@ -3,6 +3,7 @@ package com.example.firebasehiltcomposewhasapp.presentation.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,11 +19,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +34,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.firebasehiltcomposewhasapp.data.dto.ChatDTO
 import com.example.firebasehiltcomposewhasapp.navigation.AppScreens
@@ -38,13 +47,12 @@ import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MyHomeView
 
 @Composable
 fun HomeScreen(navController: NavHostController, homeViewModel: MyHomeViewModel) {
-
     val chatList: MutableList<ChatDTO> by homeViewModel.homeChatList.observeAsState(initial = mutableListOf())
+
     Box(
-        Modifier
-            .fillMaxSize()
+        Modifier.fillMaxSize()
     ) {
-        Column(Modifier.fillMaxSize(),Arrangement.Top){
+        Column(Modifier.fillMaxSize(), Arrangement.Top) {
             Row(
                 Modifier
                     .height(40.dp)
@@ -52,37 +60,73 @@ fun HomeScreen(navController: NavHostController, homeViewModel: MyHomeViewModel)
                     .fillMaxWidth()
                     .border(BorderStroke(2.dp, MaterialTheme.colorScheme.inversePrimary))
             ) {
-                Text("HomeScreen", Modifier.padding(8.dp), color = MaterialTheme.colorScheme.primary)
+                Text(
+                    "HomeScreen",
+                    Modifier.padding(8.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
 
-            if(chatList.isEmpty()){CircularProgressIndicator(
+            if (chatList.isEmpty()) {
+                CircularProgressIndicator(
                     Modifier
                         .fillMaxWidth()
-                        .padding(64.dp), MaterialTheme.colorScheme.primary)}
-            else{
-                    LazyColumn {
-                        items(chatList){chat->
-                            Text(text = chat.name)
-                            Text(text = chat.emailList.toString().removeSurrounding("[","]"))
+                        .padding(64.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            } else {
+                LazyColumn(Modifier.padding(4.dp)) {
+                    items(chatList) { chat ->
+                        Button(
+                            onClick = {
+                                homeViewModel.onChatItemClicked(chat.id)
+                                navController.navigate(AppScreens.ChatScreen.route)
+                            },
+                            Modifier.padding(2.dp).fillMaxWidth(),
+                            contentPadding = PaddingValues(0.dp),
+                            shape = MaterialTheme.shapes.medium,
+                            colors = ButtonDefaults.buttonColors(
+                                contentColor = MaterialTheme.colorScheme.onSurface
+                            )
+                        ) {
+                            Column(Modifier.clickable {
+                                homeViewModel.onChatItemClicked(chat.id)
+                                navController.navigate(AppScreens.ChatScreen.route)
+                            }) {
+                                Text(
+                                    text = chat.name,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = chat.emailList.toString().removeSurrounding("[", "]"),
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         }
                     }
                 }
+            }
         }
+
         OutlinedButton(
-            onClick = {  navController.navigate(AppScreens.NewChatScreen.route) },
-            border = null,
-            shape= CircleShape,
-            contentPadding=PaddingValues(0.dp),
-            elevation = ButtonDefaults.buttonElevation(8.dp),
+            onClick = { navController.navigate(AppScreens.NewChatScreen.route) },
             modifier = Modifier
                 .padding(16.dp)
                 .size(48.dp)
                 .align(Alignment.BottomEnd),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary,
+            shape = CircleShape,
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Icon(imageVector = Icons.Default.Add, "", tint = Color.White, modifier = Modifier.size(40.dp))
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(40.dp)
+            )
         }
     }
-
 }

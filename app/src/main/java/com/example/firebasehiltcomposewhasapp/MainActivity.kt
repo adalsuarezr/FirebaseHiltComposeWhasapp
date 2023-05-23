@@ -13,10 +13,12 @@ import com.example.firebasehiltcomposewhasapp.ui.theme.FirebaseHiltComposeWhasap
 import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MyHomeViewModel
 import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MySignInViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     private val accessViewModel: MySignInViewModel by viewModels()
     private val homeViewModel: MyHomeViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {

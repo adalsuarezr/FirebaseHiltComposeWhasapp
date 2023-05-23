@@ -1,18 +1,38 @@
 package com.example.firebasehiltcomposewhasapp.presentation.viewmodels
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.firebasehiltcomposewhasapp.data.dto.ChatDTO
-import com.example.firebasehiltcomposewhasapp.domain.Repository.FirebaseRepositoryImpl
+import com.example.firebasehiltcomposewhasapp.data.dto.MessageDTO
+import com.example.firebasehiltcomposewhasapp.domain.repository.FirebaseRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class MyHomeViewModel @Inject constructor() : ViewModel() {
+
     private val repository = FirebaseRepositoryImpl()
 
-    private val _homeChatList = MutableLiveData<MutableList<ChatDTO>>()
+    private val _actualChat = MutableStateFlow<ChatDTO?>(null)
+    val actualChat: StateFlow<ChatDTO?> = _actualChat
+
+    private val _goToChatId = MutableLiveData<String>("")
+    val goToChatId: LiveData<String> = _goToChatId
+    init {
+        repository.getChats()
+    }
+
+    private val mAuth = FirebaseAuth.getInstance()
+
+    private val _homeChatList = repository.chatList
     val homeChatList: LiveData<MutableList<ChatDTO>> = _homeChatList
 
     //NewChat
@@ -23,8 +43,11 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
     val participant: LiveData<String> = _participant
 
     private val _participantList =
-        MutableLiveData<MutableList<String>>(mutableListOf(FirebaseAuth.getInstance().currentUser?.email.toString()))
+        MutableLiveData<MutableList<String>>().apply { value = mutableListOf() }
     val participantList: LiveData<MutableList<String>> = _participantList
+
+    private val _addParticipantButtonEnabled = MutableLiveData<Boolean>()
+    val addParticipantButtonEnabled: LiveData<Boolean> = _addParticipantButtonEnabled
 
     fun onChatNameChanged(chatName: String) {
         _chatName.value = chatName
@@ -34,8 +57,29 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
         _participant.value = participant
     }
 
-    fun onParticipantAdded() {
+    fun onAddParticipantClicked() {
         _participantList.value?.add(participant.value.toString())
+        Log.i("valor de participantes añadidos", _participantList.value.toString())
+        _participant.value = ""
+    }
+    fun onChatItemClicked(chatId: String) {
+        _goToChatId.value = chatId
+        repository.onActiveChatChanged(chatId)
+    }
+
+    suspend fun onCreateChatClicked(): Boolean = withContext(Dispatchers.IO) {
+        val participants = _participantList.value
+        participants?.add(mAuth.currentUser?.email!!.toString())
+        val id: String = (_chatName.value + setOf(participants).toString()).hashCode().toString()
+        val chat =
+            ChatDTO(id, _chatName.value.toString(), participants!!, arrayListOf<MessageDTO>())
+
+        return@withContext suspendCoroutine<Boolean> { continuation ->
+            repository.createChat(chat) { isSuccess ->
+                _participantList.value = mutableListOf()
+                continuation.resume(isSuccess)
+            }
+        }
     }
 
     fun chatNameErrorMessage(chatName: String): String {
@@ -54,6 +98,10 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
         var errorMessage = ""
         if (!participant.isNullOrEmpty() && !participantValidator()) {
             errorMessage = "Not valid email format"
+        } else {
+            if (participantValidator() && _participantList.value?.size == 9) {
+                errorMessage = "Maximum number of participants reached"
+            }
         }
         return errorMessage
     }
@@ -84,16 +132,16 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
         return validation
     }
 
-    fun enableCreateChat(): Boolean {
+    fun enableCreateChatButton(): Boolean {
         var boolean = false
-        if (chatNameValidator() && participantListValidator()) {
+        if (chatNameValidator() && participantList.value.toString().isNotEmpty()) {
             boolean = true
         }
         return boolean
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun enableAddParticipant(): Boolean {
+    fun enableAddParticipantButton(): Boolean {
         var boolean = true
         if (_participantList.value.toString().isNotEmpty()) {
             if (_participantList.value?.size == 9)

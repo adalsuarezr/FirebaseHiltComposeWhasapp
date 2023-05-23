@@ -15,9 +15,13 @@ import com.example.firebasehiltcomposewhasapp.presentation.screens.SignUpScreen
 import com.example.firebasehiltcomposewhasapp.presentation.screens.SplashScreen
 import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MyHomeViewModel
 import com.example.firebasehiltcomposewhasapp.presentation.viewmodels.MySignInViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun AppNavigation(accessViewModel: MySignInViewModel, homeViewModel: MyHomeViewModel) {
+fun AppNavigation(
+    accessViewModel: MySignInViewModel,
+    homeViewModel: MyHomeViewModel
+) {
     val navController = rememberNavController()
 
     NavHost(

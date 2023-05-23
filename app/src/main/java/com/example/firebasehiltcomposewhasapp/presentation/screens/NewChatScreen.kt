@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.firebasehiltcomposewhasapp.data.dto.ChatDTO
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyChatNameTextField
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyCreateChatButton
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyParticipantTextField
@@ -37,6 +38,7 @@ fun NewChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) 
     val participant: String by viewModel.participant.observeAsState(initial = "")
     val participantList: MutableList<String> by viewModel.participantList.observeAsState(initial= mutableListOf())
     val focusManager = LocalFocusManager.current
+    val enableAddParticipant:Boolean by viewModel.addParticipantButtonEnabled.observeAsState(initial = false)
     var context = LocalContext.current
 
     Column(
@@ -75,18 +77,19 @@ fun NewChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) 
                 Modifier.weight(4f)
             )
             OutlinedButton(
-                onClick = {  },
+                onClick = { viewModel.onAddParticipantClicked() },
                 border = null,
                 contentPadding= PaddingValues(0.dp),
                 elevation = ButtonDefaults.buttonElevation(8.dp),
                 modifier = Modifier
                     .padding(16.dp),
+                enabled = viewModel.enableAddParticipantButton(),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             ) {
                 Icon(imageVector = Icons.Default.Add, "", tint = Color.White, modifier = Modifier)
             }
         }
-        MyCreateChatButton("Create Chat", MyHomeViewModel(), navController )
+        MyCreateChatButton("Create Chat", viewModel, navController )
 
 
 
