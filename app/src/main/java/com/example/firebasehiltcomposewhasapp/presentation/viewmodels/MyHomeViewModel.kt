@@ -26,11 +26,14 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
 
     private val _goToChatId = MutableLiveData<String>("")
     val goToChatId: LiveData<String> = _goToChatId
+
     init {
         repository.getChats()
     }
 
     private val mAuth = FirebaseAuth.getInstance()
+
+    val userId = mAuth.currentUser?.email
 
     private val _homeChatList = repository.chatList
     val homeChatList: LiveData<MutableList<ChatDTO>> = _homeChatList
@@ -62,8 +65,10 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
         Log.i("valor de participantes añadidos", _participantList.value.toString())
         _participant.value = ""
     }
+
     fun onChatItemClicked(chatId: String) {
         _goToChatId.value = chatId
+        _actualChat.value = homeChatList.value?.find { it.id == chatId }
         repository.onActiveChatChanged(chatId)
     }
 
@@ -148,5 +153,17 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
                 boolean = false
         }
         return boolean
+    }
+
+    fun onMessageChanged(newValue: String) {
+
+    }
+
+    fun onSendMessageClicked() {
+        TODO("Not yet implemented")
+    }
+
+    fun enableSendMessageButton(): Boolean {
+        return true
     }
 }

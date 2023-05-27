@@ -2,6 +2,7 @@ package com.example.firebasehiltcomposewhasapp.presentation.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -341,6 +342,39 @@ fun MyParticipantTextField(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = {focusManager.moveFocus(FocusDirection.Down)}),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                placeholderColor = Color.Gray,
+                unfocusedLabelColor = Color.Gray,
+                focusedLabelColor = Color.Black,
+                unfocusedIndicatorColor = Color.Black,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary
+            )
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyMessageTextField(
+    message: String,
+    placeholder: String,
+    viewModel: MyHomeViewModel,
+    focusManager:FocusManager,
+    onTextChanged: (String) -> Unit,
+    modifier:Modifier
+) {
+    Box(modifier = modifier) {
+        OutlinedTextField(
+            value = message,
+            onValueChange = { onTextChanged(it) },
+            modifier = Modifier.fillMaxWidth().background(Color.Transparent),
+            placeholder = { Text(text = placeholder) },
+            maxLines = 1,
+            shape = RoundedCornerShape(24.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+            keyboardActions = KeyboardActions(onNext = {}),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White,
                 placeholderColor = Color.Gray,

@@ -2,10 +2,10 @@ package com.example.firebasehiltcomposewhasapp.domain.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.firebasehiltcomposewhasapp.domain.UserRegister
 import com.example.firebasehiltcomposewhasapp.data.dto.ChatDTO
 import com.example.firebasehiltcomposewhasapp.data.dto.MessageDTO
 import com.example.firebasehiltcomposewhasapp.data.dto.UserRegisterDTO
+import com.example.firebasehiltcomposewhasapp.domain.UserRegister
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-class FirebaseRepositoryImpl : FirebaseRepository {
+class FirebaseRepositoryImpl : FirebaseRepository{
     val dbRegister =
         Firebase.database("https://fir-hiltcomposewhasapp-default-rtdb.europe-west1.firebasedatabase.app/")
             .getReference("register")
@@ -47,7 +47,8 @@ class FirebaseRepositoryImpl : FirebaseRepository {
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
+                val chat = snapshot.getValue(ChatDTO::class.java)
+                _actualChat.value =chat
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -201,6 +202,4 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     override fun updateChatRemoveParticipant() {
         TODO("Not yet implemented")
     }
-
-
 }
