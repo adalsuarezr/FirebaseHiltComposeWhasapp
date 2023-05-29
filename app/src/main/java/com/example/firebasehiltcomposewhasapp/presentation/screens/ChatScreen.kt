@@ -38,7 +38,7 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
     val focusManager = LocalFocusManager.current
     var messageContent = ""
     Column(Modifier.fillMaxSize()) {
-        TopAppBar(title = { Text(text = actualChat?.name.toString() ?: "No name") })
+        TopAppBar(title = { Text(text = actualChat?.name.toString()) })
 
         Column(Modifier.weight(1f)) {
             LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(vertical = 8.dp)) {

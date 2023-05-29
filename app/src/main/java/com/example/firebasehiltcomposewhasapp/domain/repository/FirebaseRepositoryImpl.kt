@@ -17,6 +17,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -34,13 +35,20 @@ class FirebaseRepositoryImpl : FirebaseRepository{
     var emailList = ArrayList<String>()//Todo livedata
     private val messages: MutableLiveData<List<MessageDTO>> = MutableLiveData()
 
-    private val _actualChat = MutableStateFlow<ChatDTO?>(null)
-    val actualChat: Flow<ChatDTO?> = _actualChat
+    private var _actualChat = MutableStateFlow<ChatDTO?>(null)
+    val actualChat: MutableStateFlow<ChatDTO?> = _actualChat
 
 
     override fun onActiveChatChanged(chatId: String) {
-        var chatRef = FirebaseDatabase.getInstance().reference.child("chats").child(chatId)
-        var childChange = chatRef.addChildEventListener(object: ChildEventListener {
+        val actualChat:ChatDTO
+        val requestActualChat=dbChats.child(chatId).get()
+        requestActualChat.addOnSuccessListener { chatResponse ->
+            val chat =
+                chatResponse.getValue(ChatDTO::class.java) ?: return@addOnSuccessListener
+                _actualChat.value=chat
+        }
+
+        var childChange = dbChats.child(chatId).addChildEventListener(object: ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chat = snapshot.getValue(ChatDTO::class.java)
                 _actualChat.value =chat

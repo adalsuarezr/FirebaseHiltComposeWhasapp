@@ -2,6 +2,8 @@ package com.example.firebasehiltcomposewhasapp.presentation.viewmodels
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,8 +23,7 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
 
     private val repository = FirebaseRepositoryImpl()
 
-    private val _actualChat = MutableStateFlow<ChatDTO?>(null)
-    val actualChat: StateFlow<ChatDTO?> = _actualChat
+    val actualChat: MutableStateFlow<ChatDTO?> = repository.actualChat   //actualChat.observeAsState(initial = mutableListOf())
 
     private val _goToChatId = MutableLiveData<String>("")
     val goToChatId: LiveData<String> = _goToChatId
@@ -68,7 +69,7 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
 
     fun onChatItemClicked(chatId: String) {
         _goToChatId.value = chatId
-        _actualChat.value = homeChatList.value?.find { it.id == chatId }
+        //_actualChat.value = homeChatList.value?.find { it.id == chatId }
         repository.onActiveChatChanged(chatId)
     }
 
