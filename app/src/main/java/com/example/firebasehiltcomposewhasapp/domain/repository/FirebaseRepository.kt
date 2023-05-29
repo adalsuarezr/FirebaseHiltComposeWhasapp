@@ -24,4 +24,5 @@ interface FirebaseRepository {
     fun updateChatNewParticipant()
     fun updateChatRemoveParticipant()
 
+    fun getChatByChatId(chatId: String)
 }

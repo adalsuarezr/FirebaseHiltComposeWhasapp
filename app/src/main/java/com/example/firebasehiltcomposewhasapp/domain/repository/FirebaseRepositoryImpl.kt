@@ -40,39 +40,37 @@ class FirebaseRepositoryImpl : FirebaseRepository{
 
 
     override fun onActiveChatChanged(chatId: String) {
-        val actualChat:ChatDTO
-        val requestActualChat=dbChats.child(chatId).get()
-        requestActualChat.addOnSuccessListener { chatResponse ->
-            val chat =
-                chatResponse.getValue(ChatDTO::class.java) ?: return@addOnSuccessListener
-                _actualChat.value=chat
-        }
+        getChatByChatId(chatId)
 
-        var childChange = dbChats.child(chatId).addChildEventListener(object: ChildEventListener {
+        dbChats.child(chatId).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val chat = snapshot.getValue(ChatDTO::class.java)
-                _actualChat.value =chat
+                getChatByChatId(chatId)
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val chat = snapshot.getValue(ChatDTO::class.java)
-                _actualChat.value =chat
+                getChatByChatId(chatId)
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
+                // No implementado actualmente
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
+                // No implementado actualmente
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                // Manejar el error de cancelación aquí si es necesario
             }
-
-        })}
-
+        })
+    }
+    override fun getChatByChatId(chatId:String){
+        dbChats.child(chatId).get().addOnSuccessListener { chatResponse ->
+            val chat =
+                chatResponse.getValue(ChatDTO::class.java) ?: return@addOnSuccessListener
+            _actualChat.value=chat
+        }
+    }
     override fun getMessages(): LiveData<List<MessageDTO>> {
         TODO("Not yet implemented")
     }
