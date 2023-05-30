@@ -22,6 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -36,7 +37,7 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
     val actualChat by viewModel.actualChat.collectAsState()
     val user = viewModel.userId
     val focusManager = LocalFocusManager.current
-    var messageContent = ""
+    val messageContent by viewModel.messageContent.observeAsState("")
     Column(Modifier.fillMaxSize()) {
         TopAppBar(title = { Text(text = actualChat?.name.toString()) })
 
@@ -72,7 +73,10 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
                 viewModel = viewModel,
                 focusManager = focusManager,
                 onTextChanged = { viewModel.onMessageChanged(it) },
-                modifier = Modifier.weight(1f).fillMaxWidth().height(66.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .height(66.dp)
             )
             IconButton(
                 onClick = { viewModel.onSendMessageClicked() },

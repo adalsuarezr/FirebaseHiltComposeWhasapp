@@ -1,5 +1,7 @@
 package com.example.firebasehiltcomposewhasapp.domain.repository
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.firebasehiltcomposewhasapp.data.dto.ChatDTO
@@ -14,6 +16,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-class FirebaseRepositoryImpl : FirebaseRepository{
+class FirebaseRepositoryImpl : FirebaseRepository {
     val dbRegister =
         Firebase.database("https://fir-hiltcomposewhasapp-default-rtdb.europe-west1.firebasedatabase.app/")
             .getReference("register")
@@ -64,19 +67,32 @@ class FirebaseRepositoryImpl : FirebaseRepository{
             }
         })
     }
-    override fun getChatByChatId(chatId:String){
+
+    override fun getChatByChatId(chatId: String) {
         dbChats.child(chatId).get().addOnSuccessListener { chatResponse ->
             val chat =
                 chatResponse.getValue(ChatDTO::class.java) ?: return@addOnSuccessListener
-            _actualChat.value=chat
+            _actualChat.value = chat
         }
     }
+
     override fun getMessages(): LiveData<List<MessageDTO>> {
         TODO("Not yet implemented")
     }
 
-    override fun sendMessage(content: String) {
-        TODO("Not yet implemented")
+    override fun sendMessage(content: String, diceType: Boolean, participant: String) {
+        val message = MessageDTO(participant, content, diceType)
+        val chatName = _actualChat.value?.name.toString()
+        if (chatName != null) {
+            dbChats.child(chatName).get().addOnSuccessListener { chatResponse ->
+                val chat = chatResponse.getValue(ChatDTO::class.java)
+                chat?.messageList?.add(message)
+                dbChats.child(chatName).setValue(chat)
+            }
+                    .addOnFailureListener { error ->
+                        Log.e(TAG, "Error al leer el chat: $error")
+                    }
+        }
     }
 
     override fun createUserEmailPassword(

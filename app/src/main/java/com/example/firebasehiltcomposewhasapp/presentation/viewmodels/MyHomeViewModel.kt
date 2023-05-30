@@ -46,6 +46,9 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
     private val _participant = MutableLiveData<String>()
     val participant: LiveData<String> = _participant
 
+    private val _messageContent = MutableLiveData<String>()
+    val messageContent: LiveData<String> = _messageContent
+
     private val _participantList =
         MutableLiveData<MutableList<String>>().apply { value = mutableListOf() }
     val participantList: LiveData<MutableList<String>> = _participantList
@@ -157,12 +160,13 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onMessageChanged(newValue: String) {
-
+        _messageContent.value=newValue
     }
 
     fun onSendMessageClicked() {
-        TODO("Not yet implemented")
-    }
+        if(messageContent!=null){
+        repository.sendMessage(messageContent.value.toString(), false, userId!!)
+    }}
 
     fun enableSendMessageButton(): Boolean {
         return true
