@@ -23,12 +23,12 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
 
     private val repository = FirebaseRepositoryImpl()
 
-    val actualChat: MutableStateFlow<ChatDTO?> = repository.actualChat   //actualChat.observeAsState(initial = mutableListOf())
-
+    val actualChat: StateFlow<ChatDTO?> = repository.actualChat
     private val _goToChatId = MutableLiveData<String>("")
     val goToChatId: LiveData<String> = _goToChatId
 
     init {
+
         repository.getChats()
     }
 
@@ -72,7 +72,6 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
 
     fun onChatItemClicked(chatId: String) {
         _goToChatId.value = chatId
-        //_actualChat.value = homeChatList.value?.find { it.id == chatId }
         repository.onActiveChatChanged(chatId)
     }
 

@@ -82,16 +82,19 @@ class FirebaseRepositoryImpl : FirebaseRepository {
 
     override fun sendMessage(content: String, diceType: Boolean, participant: String) {
         val message = MessageDTO(participant, content, diceType)
-        val chatName = _actualChat.value?.name.toString()
-        if (chatName != null) {
-            dbChats.child(chatName).get().addOnSuccessListener { chatResponse ->
-                val chat = chatResponse.getValue(ChatDTO::class.java)
-                chat?.messageList?.add(message)
-                dbChats.child(chatName).setValue(chat)
-            }
-                    .addOnFailureListener { error ->
-                        Log.e(TAG, "Error al leer el chat: $error")
-                    }
+        val chat = _actualChat.value
+
+        if (chat != null) {
+            chat.messageList.add(message)
+
+            dbChats.child(chat.name).setValue(chat)
+                .addOnSuccessListener {
+                    // La actualización se guardó exitosamente en la base de datos
+                }
+                .addOnFailureListener { error ->
+                    // Manejar el error al guardar la actualización en la base de datos
+                    Log.e(TAG, "Error al guardar el chat: $error")
+                }
         }
     }
 
