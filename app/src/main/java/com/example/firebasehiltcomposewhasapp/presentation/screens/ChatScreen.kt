@@ -1,15 +1,7 @@
 package com.example.firebasehiltcomposewhasapp.presentation.screens
 
 import android.util.Log
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -41,19 +33,40 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
     Column(Modifier.fillMaxSize()) {
         TopAppBar(title = { Text(text = actualChat?.name.toString()) })
 
-        Column(Modifier.weight(1f)) {
-            LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(vertical = 8.dp)) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)
+            ) {
                 actualChat?.let { chat ->
                     items(chat.messageList) { message ->
-                        val modifierWithAlignment = when {
-                            message.diceType -> Modifier.align(Alignment.CenterHorizontally)
-                            user == message.participant -> Modifier.align(Alignment.Start)
-                            else -> Modifier.align(Alignment.End)
-                        }
-                        Box(modifier = modifierWithAlignment.fillMaxWidth()) {
-                            Column {
-                                Text(message.participant)
-                                Text(message.content)
+                        val modifierWithAlignment: Modifier =
+                            if (message.diceType) {
+                                Modifier
+                                    .wrapContentHeight()
+                                    .align(Alignment.CenterHorizontally)
+                            } else {
+                                if (user.hashCode().toString() == message.participant.hashCode().toString()) {
+                                    Modifier
+                                        .wrapContentHeight()
+                                        .align(Alignment.Start)
+                                } else {
+                                    Modifier
+                                        .wrapContentHeight()
+                                        .align(Alignment.End)
+                                }
+                            }
+                        Log.d("message", user.hashCode().toString() + " " + message.participant.hashCode().toString())
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Column(Modifier.fillMaxSize().align(Alignment.TopEnd)) {
+                                Text(message.participant,modifierWithAlignment)
+                                Text(message.content,modifierWithAlignment)
                             }
                         }
                     }

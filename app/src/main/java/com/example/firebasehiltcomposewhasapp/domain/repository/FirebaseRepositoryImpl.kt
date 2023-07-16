@@ -69,7 +69,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override fun getChatByChatId(chatId: String) {
-        dbChats.child(chatId).get().addOnSuccessListener { chatResponse ->
+        dbChats.child(chatId.toString()).get().addOnSuccessListener { chatResponse ->
             val chat =
                 chatResponse.getValue(ChatDTO::class.java) ?: return@addOnSuccessListener
             _actualChat.value = chat
@@ -81,13 +81,13 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override fun sendMessage(content: String, diceType: Boolean, participant: String) {
-        val message = MessageDTO(participant, content, diceType)
+        val message = MessageDTO(content, diceType, participant)
         val chat = _actualChat.value
 
         if (chat != null) {
             chat.messageList.add(message)
 
-            dbChats.child(chat.name).setValue(chat)
+            dbChats.child(chat.id).setValue(chat)
                 .addOnSuccessListener {
                     // La actualización se guardó exitosamente en la base de datos
                 }

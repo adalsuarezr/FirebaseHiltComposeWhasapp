@@ -372,7 +372,6 @@ fun MyMessageTextField(
             placeholder = { Text(text = placeholder) },
             maxLines = 1,
             shape = RoundedCornerShape(24.dp),
-            singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             keyboardActions = KeyboardActions(onNext = {}),
             colors = TextFieldDefaults.textFieldColors(
