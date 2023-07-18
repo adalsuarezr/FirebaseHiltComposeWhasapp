@@ -1,11 +1,13 @@
 package com.example.firebasehiltcomposewhasapp.presentation.screens
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -40,6 +42,8 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
     val focusManager = LocalFocusManager.current
     val messageContent by viewModel.messageContent.observeAsState("")
 
+    val iconEraseMessageVisibility = false
+
     val lazyListState = rememberLazyListState()
     LaunchedEffect(actualChat) {
         if (!actualChat?.messageList.isNullOrEmpty()) {
@@ -48,7 +52,19 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
     }
 
     Column(Modifier.fillMaxSize()) {
-        TopAppBar(title = { Text(text = actualChat?.name.toString()) })
+        TopAppBar(
+            title = { Text(text = actualChat?.name.toString()) },
+            actions = {
+                if (iconEraseMessageVisibility) {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete message"
+                        )
+                    }
+                }
+            }
+        )
 
         Column(
             modifier = Modifier
@@ -70,7 +86,7 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
                                     .wrapContentHeight()
                                     .align(Alignment.CenterHorizontally)
                             } else {
-                                Modifier
+                                Modifier.wrapContentHeight()
                             }
                         val boxAlignment: Alignment =
                             if (message.diceType) {
@@ -86,14 +102,14 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
                             }
                         val cardBackgroundColor: Color =
                             if (message.diceType) {
-                                Color(150,150,150)
+                                Color(150, 150, 150)
                             } else {
                                 if (user.hashCode().toString() == message.participant.hashCode()
                                         .toString()
                                 ) {
-                                    Color(220,220,220)
+                                    Color(220, 220, 220)
                                 } else {
-                                    Color(170,170,170)
+                                    Color(170, 170, 170)
                                 }
                             }
                         val paddingValues =
@@ -126,11 +142,13 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
                             contentAlignment = boxAlignment
                         ) {
                             Card(
-                                modifier = Modifier.wrapContentWidth().pointerInput(Unit){
-                                    detectTapGestures(onLongPress = {/*change visibility buttons tollbar*/
+                                modifier = Modifier
+                                    .wrapContentWidth()
+                                    .pointerInput(Unit) {
+                                        detectTapGestures(onLongPress = {/*change visibility buttons tollbar*/
 
-                                    })
-                                },
+                                        })
+                                    },
                                 colors = CardDefaults.cardColors(
                                     containerColor = cardBackgroundColor
                                 )
@@ -152,8 +170,8 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
 
         Row(
             Modifier
-                .height(70.dp)
-                .padding(2.dp),
+                .padding(2.dp)
+                .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             MyMessageTextField(
@@ -165,13 +183,19 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .height(66.dp)
             )
             IconButton(
                 onClick = { viewModel.onSendMessageClicked() },
-                modifier = Modifier.size(66.dp)
+                modifier = Modifier.wrapContentSize(),
             ) {
-                Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
+                Icon(
+                    imageVector = Icons.Default.Send,
+                    contentDescription = "Send",
+                    modifier = Modifier
+                        .size(66.dp)
+                        .wrapContentSize()
+                        .align(Alignment.CenterVertically)
+                )
             }
         }
     }

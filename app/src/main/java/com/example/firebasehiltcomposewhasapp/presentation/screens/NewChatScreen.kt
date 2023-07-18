@@ -63,7 +63,9 @@ fun NewChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) 
             onTextChanged = {viewModel.onChatNameChanged(it)}
         )
         Row(
-            Modifier.fillMaxWidth(),
+            Modifier
+                .fillMaxWidth()
+                .padding(top=24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -82,11 +84,11 @@ fun NewChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) 
                 contentPadding= PaddingValues(0.dp),
                 elevation = ButtonDefaults.buttonElevation(8.dp),
                 modifier = Modifier
-                    .padding(16.dp),
+                    .padding(horizontal=16.dp),
                 enabled = viewModel.enableAddParticipantButton(),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             ) {
-                Icon(imageVector = Icons.Default.Add, "", tint = Color.White, modifier = Modifier)
+                Icon(imageVector = Icons.Default.Add, "", tint = Color.White, modifier = Modifier.align(Alignment.CenterVertically))
             }
         }
         MyCreateChatButton("Create Chat", viewModel, navController )

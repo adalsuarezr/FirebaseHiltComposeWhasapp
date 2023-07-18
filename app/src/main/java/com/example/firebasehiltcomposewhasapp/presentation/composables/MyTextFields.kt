@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -321,13 +322,12 @@ fun MyParticipantTextField(
     onTextChanged: (String) -> Unit,
     modifier:Modifier
 ) {
-    Column(modifier.fillMaxWidth()) {
+    Box(modifier.fillMaxWidth()) {
         OutlinedTextField(
             value = participant,
             onValueChange = { onTextChanged(it) },
             Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp)
                 .background(Color.Transparent),
             label = { Text(text = label) },
             placeholder = { Text(text = placeholder) },
@@ -370,7 +370,10 @@ fun MyMessageTextField(
         OutlinedTextField(
             value = message,
             onValueChange = { onTextChanged(it) },
-            modifier = Modifier.fillMaxWidth().background(Color.Transparent),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Transparent)
+                .wrapContentHeight(),
             placeholder = { Text(text = placeholder) },
             maxLines = 1,
             shape = RoundedCornerShape(24.dp),
