@@ -1,6 +1,5 @@
 package com.example.firebasehiltcomposewhasapp.presentation.screens
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,7 +13,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -27,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.firebasehiltcomposewhasapp.presentation.composables.MyMessageTextField
@@ -70,13 +67,17 @@ fun ChatScreen(navController: NavHostController, viewModel: MyHomeViewModel) {
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalArrangement = Arrangement.Top
         ) {
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 state = lazyListState,
-                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
+                verticalArrangement = Arrangement.Top
             ) {
                 actualChat?.let { chat ->
                     items(chat.messageList) { message ->

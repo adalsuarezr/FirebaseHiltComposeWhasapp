@@ -80,8 +80,8 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         TODO("Not yet implemented")
     }
 
-    override fun sendMessage(content: String, diceType: Boolean, participant: String) {
-        val message = MessageDTO(content, diceType, participant)
+    override fun sendMessage(content: String, diceType: Boolean, participant: String, id:Long) {
+        val message = MessageDTO(content, diceType, participant, id)
         val chat = _actualChat.value
 
         if (chat != null) {

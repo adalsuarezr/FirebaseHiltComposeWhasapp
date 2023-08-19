@@ -11,7 +11,7 @@ interface FirebaseRepository {
 
     fun onActiveChatChanged(chatId: String)
     fun getMessages(): LiveData<List<MessageDTO>>
-    fun sendMessage(content: String, diceType:Boolean, participant:String)
+    fun sendMessage(content: String, diceType:Boolean, participant:String, id:Long)
 
 
     fun createUserRegister(email: String)

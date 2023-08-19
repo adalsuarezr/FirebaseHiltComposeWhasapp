@@ -1,18 +1,15 @@
 package com.example.firebasehiltcomposewhasapp.presentation.viewmodels
 
 import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.firebasehiltcomposewhasapp.data.dto.ChatDTO
 import com.example.firebasehiltcomposewhasapp.data.dto.MessageDTO
+import com.example.firebasehiltcomposewhasapp.domain.Message
 import com.example.firebasehiltcomposewhasapp.domain.repository.FirebaseRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -66,7 +63,6 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
 
     fun onAddParticipantClicked() {
         _participantList.value?.add(participant.value.toString())
-        Log.i("valor de participantes añadidos", _participantList.value.toString())
         _participant.value = ""
     }
 
@@ -163,11 +159,11 @@ class MyHomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onSendMessageClicked() {
-        if(messageContent!=null){
-        repository.sendMessage(messageContent.value.toString(), false, userId!!)
-    }}
+        if(!messageContent.value.isNullOrEmpty()){
+            val newMessage = Message(messageContent.value.toString(),false,userId!!)
+        repository.sendMessage(newMessage.content, newMessage.diceType, newMessage.participant, newMessage.id)
 
-    fun enableSendMessageButton(): Boolean {
-        return true
+    }
+        _messageContent.value=""
     }
 }
